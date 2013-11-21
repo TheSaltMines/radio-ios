@@ -96,12 +96,12 @@
 		5A4942C613D4AC330085B0DC /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
 		5A4942C813D4AC390085B0DC /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		DE03C45016016A8D00753334 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		DE0B062F137AF23A00B674C2 /* rrrrradio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rrrrradio.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE0B062F137AF23A00B674C2 /* radio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = radio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE0B0633137AF23A00B674C2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		DE0B0635137AF23A00B674C2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DE0B0637137AF23A00B674C2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		DE0B063B137AF23A00B674C2 /* rrrrradio-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "rrrrradio-Info.plist"; sourceTree = SOURCE_ROOT; };
-		DE0B063F137AF23A00B674C2 /* rrrrradio-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rrrrradio-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		DE0B063B137AF23A00B674C2 /* radio-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "radio-Info.plist"; sourceTree = "<group>"; };
+		DE0B063F137AF23A00B674C2 /* radio-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "radio-Prefix.pch"; sourceTree = "<group>"; };
 		DE0B0640137AF23A00B674C2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
 		DE0B0642137AF23A00B674C2 /* rrrrradioAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rrrrradioAppDelegate.h; sourceTree = "<group>"; };
 		DE0B0643137AF23A00B674C2 /* rrrrradioAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = rrrrradioAppDelegate.m; sourceTree = "<group>"; };
@@ -236,8 +236,8 @@
 				5A4942C013D4AC0A0085B0DC /* Icon.png */,
 				DEE95AD4138C1D6100FDFF15 /* resources */,
 				DEE95AD1138C1D3F00FDFF15 /* classes */,
-				DE0B063B137AF23A00B674C2 /* rrrrradio-Info.plist */,
-				DE0B063F137AF23A00B674C2 /* rrrrradio-Prefix.pch */,
+				DE0B063B137AF23A00B674C2 /* radio-Info.plist */,
+				DE0B063F137AF23A00B674C2 /* radio-Prefix.pch */,
 				DE0B0640137AF23A00B674C2 /* main.m */,
 				DEE95AD3138C1D5A00FDFF15 /* assets */,
 				DEE95AD5138C1D6F00FDFF15 /* contrib */,
@@ -248,7 +248,7 @@
 		DE0B0630137AF23A00B674C2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DE0B062F137AF23A00B674C2 /* rrrrradio.app */,
+				DE0B062F137AF23A00B674C2 /* radio.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -404,9 +404,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DE0B062E137AF23A00B674C2 /* rrrrradio */ = {
+		DE0B062E137AF23A00B674C2 /* radio */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DE0B0650137AF23A00B674C2 /* Build configuration list for PBXNativeTarget "rrrrradio" */;
+			buildConfigurationList = DE0B0650137AF23A00B674C2 /* Build configuration list for PBXNativeTarget "radio" */;
 			buildPhases = (
 				DE64EAC31599442F00845AE0 /* ShellScript */,
 				DE0B062B137AF23A00B674C2 /* Sources */,
@@ -418,9 +418,9 @@
 			);
 			dependencies = (
 			);
-			name = rrrrradio;
+			name = radio;
 			productName = rrrrradio;
-			productReference = DE0B062F137AF23A00B674C2 /* rrrrradio.app */;
+			productReference = DE0B062F137AF23A00B674C2 /* radio.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -431,8 +431,13 @@
 			attributes = {
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = rrrrradio;
+				TargetAttributes = {
+					DE0B062E137AF23A00B674C2 = {
+						DevelopmentTeam = LA8G67SD2V;
+					};
+				};
 			};
-			buildConfigurationList = DE0B0629137AF23A00B674C2 /* Build configuration list for PBXProject "rrrrradio" */;
+			buildConfigurationList = DE0B0629137AF23A00B674C2 /* Build configuration list for PBXProject "radio" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -444,7 +449,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				DE0B062E137AF23A00B674C2 /* rrrrradio */,
+				DE0B062E137AF23A00B674C2 /* radio */,
 			);
 		};
 /* End PBXProject section */
@@ -499,11 +504,11 @@
 			inputPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/rrrrradio-Info.plist",
+				"$(DERIVED_FILE_DIR)/radio-Info.plist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "TARGET=\"$PROJECT_DIR/rrrrradio-Info.plist\"\necho $TARGET\nif [ ! -f \"$TARGET\" ]; then\necho \"missing file $TARGET\"\nexit 1;\nfi\n\n# the perl regex splits out the last part of a build number (ie: 1.1.1) and increments it by one\n# if you have a build number that is more than 3 components, add a '\\.\\d+' into the first part of the regex.\n\nNEW_VERSION=`/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$TARGET\" | /usr/bin/perl -pe 's/(\\d+)/($1+1)/eg'`\necho $NEW_VERSION;\n/usr/libexec/PListBuddy -c \"Set CFBundleVersion $NEW_VERSION\" \"$TARGET\"";
+			shellScript = "TARGET=\"$PROJECT_DIR/radio-Info.plist\"\necho $TARGET\nif [ ! -f \"$TARGET\" ]; then\necho \"missing file $TARGET\"\nexit 1;\nfi\n\n# the perl regex splits out the last part of a build number (ie: 1.1.1) and increments it by one\n# if you have a build number that is more than 3 components, add a '\\.\\d+' into the first part of the regex.\n\nNEW_VERSION=`/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$TARGET\" | /usr/bin/perl -pe 's/(\\d+)/($1+1)/eg'`\necho $NEW_VERSION;\n/usr/libexec/PListBuddy -c \"Set CFBundleVersion $NEW_VERSION\" \"$TARGET\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -554,7 +559,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = (
@@ -572,7 +577,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Andrew Soell";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Andrew Soell";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -580,17 +585,17 @@
 					"\"$(SRCROOT)/contrib\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "rrrrradio-Prefix.pch";
+				GCC_PREFIX_HEADER = "radio-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "rrrrradio-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				INFOPLIST_FILE = "radio-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/contrib/TestFlightSDK1.0\"",
 					"\"$(SRCROOT)/contrib/FlurryAnalytics\"",
 				);
 				OTHER_CODE_SIGN_FLAGS = "";
-				PRODUCT_NAME = rrrrradio;
+				PRODUCT_NAME = radio;
 				PROVISIONING_PROFILE = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
 				SKIP_INSTALL = NO;
@@ -617,7 +622,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -644,7 +649,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = (
@@ -662,7 +667,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Andrew Soell";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Andrew Soell";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -671,17 +676,17 @@
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "rrrrradio-Prefix.pch";
+				GCC_PREFIX_HEADER = "radio-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "rrrrradio-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				INFOPLIST_FILE = "radio-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/contrib/TestFlightSDK1.0\"",
 					"\"$(SRCROOT)/contrib/FlurryAnalytics\"",
 				);
 				OTHER_CODE_SIGN_FLAGS = "";
-				PRODUCT_NAME = rrrrradio;
+				PRODUCT_NAME = radio;
 				PROVISIONING_PROFILE = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
 				SKIP_INSTALL = NO;
@@ -694,7 +699,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Andrew Soell";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Andrew Soell";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -702,17 +707,17 @@
 					"\"$(SRCROOT)/contrib\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "rrrrradio-Prefix.pch";
+				GCC_PREFIX_HEADER = "radio-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				INFOPLIST_FILE = "rrrrradio-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				INFOPLIST_FILE = "radio-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/contrib/TestFlightSDK1.0\"",
 					"\"$(SRCROOT)/contrib/FlurryAnalytics\"",
 				);
 				OTHER_CODE_SIGN_FLAGS = "";
-				PRODUCT_NAME = rrrrradio;
+				PRODUCT_NAME = radio;
 				PROVISIONING_PROFILE = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
 				SKIP_INSTALL = NO;
@@ -725,7 +730,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		DE0B0629137AF23A00B674C2 /* Build configuration list for PBXProject "rrrrradio" */ = {
+		DE0B0629137AF23A00B674C2 /* Build configuration list for PBXProject "radio" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DE0B064E137AF23A00B674C2 /* Debug */,
@@ -735,7 +740,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DE0B0650137AF23A00B674C2 /* Build configuration list for PBXNativeTarget "rrrrradio" */ = {
+		DE0B0650137AF23A00B674C2 /* Build configuration list for PBXNativeTarget "radio" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DE0B0651137AF23A00B674C2 /* Debug */,

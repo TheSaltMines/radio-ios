@@ -1006,7 +1006,7 @@
     [internetReachable startNotifier];
     
     // check if a pathway to a random host exists
-    hostReachable = [[Reachability reachabilityWithHostName: @"rrrrradio.com"] retain];
+    hostReachable = [[Reachability reachabilityWithHostName: @"radio.saltmines.us"] retain];
     [hostReachable startNotifier];
     
     // now patiently wait for the notification    

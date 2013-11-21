@@ -18,7 +18,7 @@
     NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSString* accessToken = [[Settings settings] accessToken];
     NSError* lookupError = nil;
-    NSURL *reqURL = [[NSURL alloc] initWithString:[[NSString stringWithFormat:@"http://rrrrradio.com/%@&userKey=%@&client=ios&version=%@&build=%@&%@", command, userKey, version, build, accessToken] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSURL *reqURL = [[NSURL alloc] initWithString:[[NSString stringWithFormat:@"http://radio.saltmines.us/%@&userKey=%@&client=ios&version=%@&build=%@&%@", command, userKey, version, build, accessToken] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSLog(@"Data Interface Request: %@", [reqURL absoluteURL]);
     NSString *reqData = [[NSString alloc] initWithContentsOfURL:reqURL encoding:NSUTF8StringEncoding error:&lookupError];
     

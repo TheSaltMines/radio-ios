@@ -12,6 +12,7 @@
 #import <MediaPlayer/MPVolumeView.h>
 #import <MediaPlayer/MPNowPlayingInfoCenter.h>
 #import <MediaPlayer/MPMediaItem.h>
+#import <MediaPlayer/MPMusicPlayerController.h>
 #import <AVFoundation/AVFoundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import "rrrrradioAppDelegate.h"
@@ -241,7 +242,7 @@
     [done release];    
     
     listenerController = [[ListenerController alloc] initWithRootViewController:listenerView];
-    [listenerController.navigationBar setTintColor:[UIColor colorWithRed:185.0f/255.0f green:80.0f/255.0f blue:0.0f/255.0f alpha:1.0f]];
+    [listenerController.navigationBar setTintColor:[UIColor blackColor]];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {                    
         [listenerController setModalPresentationStyle:UIModalPresentationFormSheet];
@@ -554,6 +555,11 @@
 - (void)updateQueue {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         NSDictionary *arrayData = [[DataInterface issueCommand:@"controller.php?r=getQueue"] yajl_JSON];
+        
+        // Set the volume
+        MPMusicPlayerController *musicPlayer = [MPMusicPlayerController applicationMusicPlayer];
+        musicPlayer.volume = [[arrayData objectForKey:@"volume"] floatValue] / 10;
+        
         NSArray *queue = [arrayData objectForKey:@"queue"];   
         [self setListeners:[arrayData objectForKey:@"listeners"]];
         
@@ -611,21 +617,6 @@
 - (void)splitViewController: (UISplitViewController*)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem*)barButtonItem forPopoverController: (UIPopoverController*)pc 
 {
     // configure barButton
-/*    
-    UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage* image = [UIImage imageNamed:@"UIBarButtonAdd.png"];
-    [button setImage:image forState:UIControlStateNormal];    
-    [button setFrame:CGRectMake(0, 0, image.size.width+10, image.size.width+10)];
-    [button addTarget:self action: @selector(pop:) forControlEvents:UIControlEventTouchUpInside];
-    
-    CALayer *buttonLayer = [button layer];
-    [buttonLayer setMasksToBounds:YES];
-    [buttonLayer setCornerRadius:10.0];
-    [buttonLayer setBorderWidth:1.0];
-    [buttonLayer setBorderColor:[[UIColor grayColor] CGColor]];
-    
-    barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-*/    
     [barButtonItem setTitle:@"Request"];
     
     NSMutableArray * items = [[toolbar items] mutableCopy];
@@ -723,7 +714,7 @@
         
         int poolingInterval=0;
         if (networkSpeed==ReachableViaWiFi) {
-            poolingInterval = 20;
+            poolingInterval = 5;
         } else if (networkSpeed==ReachableViaWWAN) {
             poolingInterval = 60;
         }

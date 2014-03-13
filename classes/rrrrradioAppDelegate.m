@@ -49,7 +49,7 @@ void uncaughtExceptionHandler(NSException *exception) {
         NSArray *artistData = [NSArray arrayWithArray:[[DataInterface issueCommand:@"data.php?v=newalbums"] yajl_JSON]];
 
         navigationController = [[UINavigationController alloc] init];
-        [navigationController.navigationBar setTintColor:[UIColor colorWithRed:185.0f/255.0f green:80.0f/255.0f blue:0.0f/255.0f alpha:1.0f]];
+        [navigationController.navigationBar setTintColor:[UIColor blackColor]];
         
         CollectionBrowser *collection = [[CollectionBrowser alloc] initWithNibName:@"CollectionBrowser" bundle:nil];
         [collection setDataSource:artistData];

@@ -270,7 +270,7 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    [self.navigationController.navigationBar setTintColor:[UIColor colorWithRed:185.0f/255.0f green:80.0f/255.0f blue:0.0f/255.0f alpha:1.0f]];    
+    [self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
     NSLog(@"rotated");
     // Do any additional setup after loading the view from its nib.
 }

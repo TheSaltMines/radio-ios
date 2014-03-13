@@ -55,6 +55,7 @@
 		DE7D104C13813F7100FDA0A5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE7D104B13813F7100FDA0A5 /* MediaPlayer.framework */; };
 		DEA1793D138C225D00B03B3D /* rrrrradioViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DEA1793C138C225D00B03B3D /* rrrrradioViewController.xib */; };
 		DEA1793F138C226B00B03B3D /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DEA1793E138C226B00B03B3D /* MainWindow.xib */; };
+		DEACD78118D1EBD300190FEF /* mountains.png in Resources */ = {isa = PBXBuildFile; fileRef = DEACD78018D1EBD300190FEF /* mountains.png */; };
 		DEC83CE1138D3D0C00772F57 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC83CE0138D3D0C00772F57 /* Reachability.m */; };
 		DEDEA4A0158A4C4500604DFD /* 19-check.png in Resources */ = {isa = PBXBuildFile; fileRef = DEDEA49F158A4C4500604DFD /* 19-check.png */; };
 		DEDEA4D8158A4FC500604DFD /* ATMHud.m in Sources */ = {isa = PBXBuildFile; fileRef = DEDEA4CC158A4FC500604DFD /* ATMHud.m */; };
@@ -154,6 +155,7 @@
 		DE7D104B13813F7100FDA0A5 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		DEA1793C138C225D00B03B3D /* rrrrradioViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = rrrrradioViewController.xib; sourceTree = "<group>"; };
 		DEA1793E138C226B00B03B3D /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		DEACD78018D1EBD300190FEF /* mountains.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mountains.png; sourceTree = "<group>"; };
 		DEC83CDF138D3D0C00772F57 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		DEC83CE0138D3D0C00772F57 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		DEDEA49F158A4C4500604DFD /* 19-check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-check.png"; sourceTree = "<group>"; };
@@ -348,6 +350,7 @@
 		DEE95AD3138C1D5A00FDFF15 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				DEACD78018D1EBD300190FEF /* mountains.png */,
 				DE2CAB4813A004FB00D74C59 /* iPadBg.jpg */,
 				DEFFCA9C139983ED007DF447 /* UIBarButtonAdd.png */,
 				DE6ED956137DDEA600282BB8 /* trackbg.png */,
@@ -489,6 +492,7 @@
 				DEDEA4E1158A601100604DFD /* 11-x.png in Resources */,
 				DEDEA4E4158A656F00604DFD /* hate.png in Resources */,
 				DEDEA4E5158A656F00604DFD /* heart.png in Resources */,
+				DEACD78118D1EBD300190FEF /* mountains.png in Resources */,
 				DE03C45116016A8D00753334 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -577,8 +581,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Andrew Soell";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Andy Soell (C395UDHLJ4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Andy Soell (C395UDHLJ4)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -588,7 +592,7 @@
 				GCC_PREFIX_HEADER = "radio-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "radio-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/contrib/TestFlightSDK1.0\"",
@@ -596,8 +600,8 @@
 				);
 				OTHER_CODE_SIGN_FLAGS = "";
 				PRODUCT_NAME = radio;
-				PROVISIONING_PROFILE = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
+				PROVISIONING_PROFILE = "EA901A68-2547-441C-974C-0501485B1CB5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EA901A68-2547-441C-974C-0501485B1CB5";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -667,8 +671,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Andrew Soell";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Andy Soell (C395UDHLJ4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Andy Soell (C395UDHLJ4)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -679,7 +683,7 @@
 				GCC_PREFIX_HEADER = "radio-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "radio-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/contrib/TestFlightSDK1.0\"",
@@ -687,8 +691,8 @@
 				);
 				OTHER_CODE_SIGN_FLAGS = "";
 				PRODUCT_NAME = radio;
-				PROVISIONING_PROFILE = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
+				PROVISIONING_PROFILE = "EA901A68-2547-441C-974C-0501485B1CB5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EA901A68-2547-441C-974C-0501485B1CB5";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -699,8 +703,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Andrew Soell";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Andy Soell (C395UDHLJ4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Andy Soell (C395UDHLJ4)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -710,7 +714,7 @@
 				GCC_PREFIX_HEADER = "radio-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "radio-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/contrib/TestFlightSDK1.0\"",
@@ -718,8 +722,8 @@
 				);
 				OTHER_CODE_SIGN_FLAGS = "";
 				PRODUCT_NAME = radio;
-				PROVISIONING_PROFILE = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9F78F441-B85E-4DBD-A7E9-DDC94C6ECE96";
+				PROVISIONING_PROFILE = "EA901A68-2547-441C-974C-0501485B1CB5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EA901A68-2547-441C-974C-0501485B1CB5";
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

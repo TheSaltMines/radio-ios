@@ -167,20 +167,20 @@
 
 // Toggle the display of Heads-Up-Display objects (toolbars)
 - (void)toggleHUD {
-    NSLog(@"Toggling the HUD");
-    [FlurryAnalytics logEvent:@"HUD Toggle"];
-    [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"HUD Toggle"];
-    
-    [UIView beginAnimations:@"volumeToolbar" context:nil];
-    if (volumeToolbar.alpha==0.0) {
-        [volumeToolbar setFrame:CGRectOffset([volumeToolbar frame], 0, +volumeToolbar.frame.size.height)];
-        [volumeToolbar setAlpha:1.0];     
-    } else {
-        [volumeToolbar setFrame:CGRectOffset([volumeToolbar frame], 0, -volumeToolbar.frame.size.height)];
-        [volumeToolbar setAlpha:0.0];
-   
-    }
-    [UIView commitAnimations];
+//    NSLog(@"Toggling the HUD");
+//    [FlurryAnalytics logEvent:@"HUD Toggle"];
+//    [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"HUD Toggle"];
+//    
+//    [UIView beginAnimations:@"volumeToolbar" context:nil];
+//    if (volumeToolbar.alpha==0.0) {
+//        [volumeToolbar setFrame:CGRectOffset([volumeToolbar frame], 0, +volumeToolbar.frame.size.height)];
+//        [volumeToolbar setAlpha:1.0];     
+//    } else {
+//        [volumeToolbar setFrame:CGRectOffset([volumeToolbar frame], 0, -volumeToolbar.frame.size.height)];
+//        [volumeToolbar setAlpha:0.0];
+//   
+//    }
+//    [UIView commitAnimations];
 }
 
 - (void)refreshLockDisplay {
@@ -223,7 +223,21 @@
      [btnNew release];    
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 - (void) displayListeners {
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        // iOS 7
+        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    } else {
+        // iOS 6
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+    }
+    
+
+    
     NSLog(@"Show current listeners");   
     [FlurryAnalytics logEvent:@"View listeners"];
     [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"View Listeners"];
@@ -636,13 +650,13 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    for (UIView *subview in volumeToolbar.subviews) {
-        if ([subview isKindOfClass:[MPVolumeView class]]) {
-            [subview setFrame:CGRectMake(0, 0, self.toolbar.frame.size.width-55, 20)];
-            [subview setCenter:CGPointMake(((self.toolbar.frame.size.width-55)/2)+45, 22)];
-            [subview sizeToFit];
-        }
-    }
+//    for (UIView *subview in volumeToolbar.subviews) {
+//        if ([subview isKindOfClass:[MPVolumeView class]]) {
+//            [subview setFrame:CGRectMake(0, 0, self.toolbar.frame.size.width-55, 20)];
+//            [subview setCenter:CGPointMake(((self.toolbar.frame.size.width-55)/2)+45, 22)];
+//            [subview sizeToFit];
+//        }
+//    }
     
     for (UIView *subview in opsToolbar.subviews) {
         if ([subview isKindOfClass:[UIButton class]]) {
@@ -988,7 +1002,7 @@
     MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(0, 0, self.toolbar.frame.size.width-55, 20)] autorelease];
     [volumeView setCenter:CGPointMake(((self.toolbar.frame.size.width-55)/2)+35, 22)];
     [volumeView sizeToFit];
-    [volumeToolbar addSubview:volumeView];
+//    [volumeToolbar addSubview:volumeView];
     
     // check for internet connection
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
@@ -1005,48 +1019,48 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     
-    // Build and display the "current listeners" box
-    listenersBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 24)];
-    [listenersBg setBackgroundColor:[UIColor blackColor]];
-    // Round the corners
-    CALayer *l = [self.listenersBg layer];
-    [l setMasksToBounds:YES];
-    [l setCornerRadius:8.0];
-    // Add border
-    [l setBorderWidth:1.0];
-    [l setBorderColor:[[UIColor blackColor] CGColor]];    
-
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {                    
-        // iPad specific tweaks
-        
-        UIView *containerView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, upcoming.frame.size.width , 40)] autorelease];
-        [upcoming setTableHeaderView:containerView];
-        
-        [upcoming setSeparatorColor:[UIColor clearColor]];
-        [upcoming setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-    }
-
-    
-    listenersLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 4, 80, 16)];
-    [listenersLabel setText:@"0 Listeners"];
-    [listenersLabel setBackgroundColor:[UIColor clearColor]];
-    [listenersLabel setTextColor:[UIColor grayColor]];
-    [listenersLabel setFont:[UIFont fontWithName:@"Trebuchet MS" size:12]];
-    [listenersLabel setTextAlignment:UITextAlignmentCenter];
-    
-    [listenersBg addSubview:listenersLabel];
-    
-    UIButton *listenerButton = [[UIButton alloc] initWithFrame:CGRectMake(self.opsToolbar.frame.size.width/2-50, self.opsToolbar.frame.size.height/2-12, 100, 24)];
-    [listenerButton addTarget:self action:@selector(displayListeners) forControlEvents:UIControlEventTouchUpInside];
-    [listenerButton setShowsTouchWhenHighlighted:YES];
-    [listenerButton addSubview:listenersBg];
-    
-    
-    [self.opsToolbar addSubview:listenerButton];
-    
-    [listenersLabel release];
-    [listenersBg release];
-    [listenerButton release];    
+//    // Build and display the "current listeners" box
+//    listenersBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 24)];
+//    [listenersBg setBackgroundColor:[UIColor blackColor]];
+//    // Round the corners
+//    CALayer *l = [self.listenersBg layer];
+//    [l setMasksToBounds:YES];
+//    [l setCornerRadius:8.0];
+//    // Add border
+//    [l setBorderWidth:1.0];
+//    [l setBorderColor:[[UIColor blackColor] CGColor]];    
+//
+//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {                    
+//        // iPad specific tweaks
+//        
+//        UIView *containerView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, upcoming.frame.size.width , 40)] autorelease];
+//        [upcoming setTableHeaderView:containerView];
+//        
+//        [upcoming setSeparatorColor:[UIColor clearColor]];
+//        [upcoming setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+//    }
+//
+//    
+//    listenersLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 4, 80, 16)];
+//    [listenersLabel setText:@"0 Listeners"];
+//    [listenersLabel setBackgroundColor:[UIColor clearColor]];
+//    [listenersLabel setTextColor:[UIColor grayColor]];
+//    [listenersLabel setFont:[UIFont fontWithName:@"Trebuchet MS" size:12]];
+//    [listenersLabel setTextAlignment:UITextAlignmentCenter];
+//    
+//    [listenersBg addSubview:listenersLabel];
+//    
+//    UIButton *listenerButton = [[UIButton alloc] initWithFrame:CGRectMake(self.opsToolbar.frame.size.width/2-50, self.opsToolbar.frame.size.height/2-12, 100, 24)];
+//    [listenerButton addTarget:self action:@selector(displayListeners) forControlEvents:UIControlEventTouchUpInside];
+//    [listenerButton setShowsTouchWhenHighlighted:YES];
+//    [listenerButton addSubview:listenersBg];
+//    
+//    
+//    [self.opsToolbar addSubview:listenerButton];
+//    
+//    [listenersLabel release];
+//    [listenersBg release];
+//    [listenerButton release];    
 
     [super viewDidLoad];
 }

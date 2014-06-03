@@ -56,7 +56,7 @@
 
 // Tell the RDPlayer object to start playing a bunch of tracks
 - (void) playTracks:(NSMutableArray *)trackData {
-    RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] player];
+    RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];
     [player playSources:trackData];
 }
 
@@ -69,8 +69,7 @@
         } else {
             if (![self isFirstResponder]) [self becomeFirstResponder];        
             
-            RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] player];
-            [player setDelegate:self];        
+            RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];
             [player addObserver:self forKeyPath:@"position" options:NSKeyValueObservingOptionNew context:nil];    
             [player addObserver:self forKeyPath:@"currentTrack" options:NSKeyValueObservingOptionNew context:nil];
             
@@ -583,7 +582,7 @@
         [_QUEUE updateQueue:queue];
         
         // update the skip value if we aren't playing
-        RDPlayer* player = [[rrrrradioAppDelegate rdioInstance] player];        
+        RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];        
         if ([player state] != RDPlayerStatePlaying) {
             skip = [[arrayData objectForKey:@"timestamp"] intValue] - [[[queue objectAtIndex:0] objectForKey:@"startplay"] intValue];
             [_QUEUE prune:[_QUEUE length]];
@@ -713,7 +712,7 @@
             NSString* savedToken = [[Settings settings] accessToken];
             if(savedToken != nil) {
                 NSLog(@"Found access token! %@", savedToken);
-                [[rrrrradioAppDelegate rdioInstance] authorizeUsingAccessToken:savedToken fromController:nil];
+                [[rrrrradioAppDelegate rdioInstance] authorizeUsingAccessToken:savedToken];
             }       
         }
         
@@ -807,9 +806,10 @@
             [self refreshQueueDisplay]; 
             [self refreshLockDisplay];               
         }
+        /*
         // Enter a playing state
         if ((oldState!=2) && (skip>0)) {
-            RDPlayer* player = [[rrrrradioAppDelegate rdioInstance] player];            
+            RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];
             NSLog(@"Picking up at %d", skip);
             sleep(1);
             [player seekToPosition:skip];
@@ -818,6 +818,7 @@
             [FlurryAnalytics logEvent:@"Stream event" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"Start", @"type", nil]];            
             [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Stream event" attributes:[NSDictionary dictionaryWithObjectsAndKeys:@"Start", @"type", nil]];            
         }
+        */
     } else if (newState == 3) {
         NSLog(@"Stopped State");        
         // Enter a stopped state
@@ -867,7 +868,7 @@
 
 - (void)dealloc
 {
-    RDPlayer* player = [[rrrrradioAppDelegate rdioInstance] player];
+    RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];
     [player removeObserver:self forKeyPath:@"position"];
     [player removeObserver:self forKeyPath:@"currentTrack"];    
     [player stop];
@@ -885,6 +886,7 @@
 
 
 - (void) enableBackgroundPooling:(int) seconds {
+/*
     if ([queueLoader isValid]) {
         [queueLoader invalidate];                            
         queueLoader = nil;
@@ -894,7 +896,7 @@
         NSLog(@"Enabling background pooling at a %i second interval", seconds);
         queueLoader = [NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(updateQueue) userInfo:nil repeats:YES];    
     }
-
+*/
 }
 
 #pragma mark -
@@ -979,8 +981,8 @@
 /**
  * Authentication failed so we should alert the user.
  */
-- (void)rdioAuthorizationFailed:(NSString *)message {
-    NSLog(@"Rdio authorization failed: %@", message);
+- (void)rdioAuthorizationFailed:(NSError *)error {
+    NSLog(@"Rdio authorization failed: %@", error.description);
 }
 
 
@@ -1136,7 +1138,7 @@
         [[NSUserDefaults standardUserDefaults] synchronize];        
     }
     if (internetActive && hostActive) {
-        RDPlayer* player = [[rrrrradioAppDelegate rdioInstance] player];    
+        RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];    
         if (player.state != RDPlayerStatePlaying) {
             NSLog(@"Initializing: Reset");
             [self stopStream];

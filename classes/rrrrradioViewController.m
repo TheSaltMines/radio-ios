@@ -167,20 +167,20 @@
 
 // Toggle the display of Heads-Up-Display objects (toolbars)
 - (void)toggleHUD {
-//    NSLog(@"Toggling the HUD");
-//    [FlurryAnalytics logEvent:@"HUD Toggle"];
-//    [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"HUD Toggle"];
-//    
-//    [UIView beginAnimations:@"volumeToolbar" context:nil];
-//    if (volumeToolbar.alpha==0.0) {
-//        [volumeToolbar setFrame:CGRectOffset([volumeToolbar frame], 0, +volumeToolbar.frame.size.height)];
-//        [volumeToolbar setAlpha:1.0];     
-//    } else {
-//        [volumeToolbar setFrame:CGRectOffset([volumeToolbar frame], 0, -volumeToolbar.frame.size.height)];
-//        [volumeToolbar setAlpha:0.0];
-//   
-//    }
-//    [UIView commitAnimations];
+    NSLog(@"Toggling the HUD");
+    [FlurryAnalytics logEvent:@"HUD Toggle"];
+    [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"HUD Toggle"];
+    
+    [UIView beginAnimations:@"volumeToolbar" context:nil];
+    if (volumeToolbar.alpha==0.0) {
+        [volumeToolbar setFrame:CGRectOffset([volumeToolbar frame], 0, +volumeToolbar.frame.size.height)];
+        [volumeToolbar setAlpha:1.0];     
+    } else {
+        [volumeToolbar setFrame:CGRectOffset([volumeToolbar frame], 0, -volumeToolbar.frame.size.height)];
+        [volumeToolbar setAlpha:0.0];
+   
+    }
+    [UIView commitAnimations];
 }
 
 - (void)refreshLockDisplay {
@@ -371,18 +371,18 @@
                 if ([obj isKindOfClass:[UpcomingCell class]]) {
                     cell = (UpcomingCell*)obj;
                     
-                    cell.textLabel.textColor = [UIColor whiteColor];
-                    cell.textLabel.backgroundColor = [UIColor clearColor];
-                    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-                    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
+//                    cell.textLabel.textColor = [UIColor whiteColor];
+//                    cell.textLabel.backgroundColor = [UIColor clearColor];
+//                    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+//                    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
                     
-                    UIImageView *cellBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"UITableViewCell-bg.jpg"]];
-                    cell.backgroundView = cellBg;   
+//                    UIImageView *cellBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"UITableViewCell-bg.jpg"]];
+//                    cell.backgroundView = cellBg;   
                     
                     [cell performSelector:@selector(setTrackData:) withObject:track]; 
                     [track setValue:cell forKey:@"UpcomingCell"];                  
                     
-                    [cellBg release];        
+//                    [cellBg release];        
                     
                     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {                          
                         CALayer *l = [cell layer];
@@ -572,7 +572,9 @@
         
         // Set the volume
         MPMusicPlayerController *musicPlayer = [MPMusicPlayerController applicationMusicPlayer];
-        musicPlayer.volume = [[arrayData objectForKey:@"volume"] floatValue] / 10;
+        if (([[arrayData objectForKey:@"volume"] floatValue] / 10) != musicPlayer.volume) {
+            musicPlayer.volume = [[arrayData objectForKey:@"volume"] floatValue] / 10;
+        }
         
         NSArray *queue = [arrayData objectForKey:@"queue"];   
         [self setListeners:[arrayData objectForKey:@"listeners"]];
@@ -594,7 +596,10 @@
             });
         }
         
-        if ([player state] == RDPlayerStatePlaying) { 
+        // update the RDPlayer if we're not within 3 seconds of end of track
+        if (([player state] == RDPlayerStatePlaying) &&
+            (([[[_QUEUE currentTrack] objectForKey:@"duration"] doubleValue]-[player position])>3) &&
+            ([player position]>3)) {
             NSArray* queue = [_QUEUE getTrackKeys];
             int ctrkindex = [queue indexOfObject:[player currentTrack]];
             
@@ -728,7 +733,7 @@
         
         int poolingInterval=0;
         if (networkSpeed==ReachableViaWiFi) {
-            poolingInterval = 5;
+            poolingInterval = 20;
         } else if (networkSpeed==ReachableViaWWAN) {
             poolingInterval = 60;
         }

@@ -1,7 +1,7 @@
-/**
- *  @file RDAPIRequest.h
+/*
+ *  RDAPIRequest.h
  *  Rdio Web Service API Requests
- *  Copyright 2011-2013 Rdio Inc. All rights reserved.
+ *  Copyright 2011 Rdio Inc. All rights reserved.
  */
 
 #import <Foundation/Foundation.h>
@@ -117,11 +117,7 @@
 
 /**
  * The parameter dictionary passed to the request. Includes a "method" value
- * indicating which web service API was called. Note that all keys and values
- * in the `parameters` dictionary will be instances of NSString.
- *
- * For example, if you make an API call with the `count` parameter set to 20, `[parameters objectForKey:@"count"]`
- * would return `@"20"`, not `@20`.
+ * indicating which web service API was called.
  */
 @property (nonatomic, readonly) NSDictionary *parameters;
 @end

@@ -48,6 +48,7 @@
 @synthesize internetActive, hostActive, networkSpeed;
 @synthesize popoverController=_myPopoverController;
 @synthesize hud;
+@synthesize musicPlayer;
 
 
 #pragma mark -
@@ -56,7 +57,7 @@
 
 // Tell the RDPlayer object to start playing a bunch of tracks
 - (void) playTracks:(NSMutableArray *)trackData {
-    RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];
+    RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] player];
     [player playSources:trackData];
 }
 
@@ -69,7 +70,8 @@
         } else {
             if (![self isFirstResponder]) [self becomeFirstResponder];        
             
-            RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];
+            RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] player];
+            [player setDelegate:self];        
             [player addObserver:self forKeyPath:@"position" options:NSKeyValueObservingOptionNew context:nil];    
             [player addObserver:self forKeyPath:@"currentTrack" options:NSKeyValueObservingOptionNew context:nil];
             
@@ -78,6 +80,7 @@
             
             [_QUEUE getNext]; // increment the pointer
             [player playSources:[_QUEUE getTrackKeys]];
+            
             [self refreshLockDisplay];            
             
             UIBarButtonItem *btnOld = [[volumeToolbar items] objectAtIndex:0];
@@ -106,7 +109,7 @@
 }
 
 // Stop the audio playback and reset the system back to infant state
-- (void)stopStream {   
+- (void)stopStream {
     RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] player];
     
     skip = [player position];
@@ -167,8 +170,6 @@
 // Toggle the display of Heads-Up-Display objects (toolbars)
 - (void)toggleHUD {
     NSLog(@"Toggling the HUD");
-    [FlurryAnalytics logEvent:@"HUD Toggle"];
-    [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"HUD Toggle"];
     
     [UIView beginAnimations:@"volumeToolbar" context:nil];
     if (volumeToolbar.alpha==0.0) {
@@ -222,24 +223,8 @@
      [btnNew release];    
 }
 
-- (BOOL)prefersStatusBarHidden {
-    return YES;
-}
-
 - (void) displayListeners {
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        // iOS 7
-        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
-    } else {
-        // iOS 6
-        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-    }
-    
-
-    
     NSLog(@"Show current listeners");   
-    [FlurryAnalytics logEvent:@"View listeners"];
-    [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"View Listeners"];
     
     UITableViewController *listenerView = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];
     [listenerView.tableView setTag:2];
@@ -255,7 +240,7 @@
     [done release];    
     
     listenerController = [[ListenerController alloc] initWithRootViewController:listenerView];
-    [listenerController.navigationBar setTintColor:[UIColor blackColor]];
+    [listenerController.navigationBar setTintColor:[UIColor colorWithRed:102.0f/255.0f green:102.0f/255.0f blue:102.0f/255.0f alpha:1.0f]];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {                    
         [listenerController setModalPresentationStyle:UIModalPresentationFormSheet];
@@ -311,7 +296,9 @@
     
     if (tableView.tag==2) {
         // Listeners
+        NSLog(@"a?");
         NSDictionary *listener = [listeners objectAtIndex:indexPath.row];
+        NSLog(@"a!");
         
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"ListenerCell"];
         [cell.textLabel setText:[NSString stringWithFormat:@"%@ %@", [listener objectForKey:@"firstName"], [listener objectForKey:@"lastName"]]];
@@ -370,18 +357,18 @@
                 if ([obj isKindOfClass:[UpcomingCell class]]) {
                     cell = (UpcomingCell*)obj;
                     
-//                    cell.textLabel.textColor = [UIColor whiteColor];
-//                    cell.textLabel.backgroundColor = [UIColor clearColor];
-//                    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-//                    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
+                    cell.textLabel.textColor = [UIColor whiteColor];
+                    cell.textLabel.backgroundColor = [UIColor clearColor];
+                    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+                    cell.detailTextLabel.backgroundColor = [UIColor clearColor];
                     
-//                    UIImageView *cellBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"UITableViewCell-bg.jpg"]];
-//                    cell.backgroundView = cellBg;   
+                    UIImageView *cellBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"UITableViewCell-bg.jpg"]];
+                    cell.backgroundView = cellBg;   
                     
                     [cell performSelector:@selector(setTrackData:) withObject:track]; 
                     [track setValue:cell forKey:@"UpcomingCell"];                  
                     
-//                    [cellBg release];        
+                    [cellBg release];        
                     
                     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {                          
                         CALayer *l = [cell layer];
@@ -509,9 +496,6 @@
     RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] player];
     
         if (buttonIndex==0) {
-            [TestFlight passCheckpoint:@"Track loved"];
-            [FlurryAnalytics logEvent:@"Track loved"];            
-            [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Track loved"];
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{                
                     [DataInterface issueCommand:[NSString stringWithFormat:@"/controller.php?r=mark&key=%@&val=1",[player currentTrack]]];
@@ -523,9 +507,6 @@
             [hud hideAfter:1.5];
             
         } else if (buttonIndex==1) {
-            [TestFlight passCheckpoint:@"Track hated"];
-            [FlurryAnalytics logEvent:@"Track hated"];            
-            [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Track hated"];
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{                
                 [DataInterface issueCommand:[NSString stringWithFormat:@"/controller.php?r=mark&key=%@&val=-1",[player currentTrack]]];
@@ -568,21 +549,19 @@
 - (void)updateQueue {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         NSDictionary *arrayData = [[DataInterface issueCommand:@"controller.php?r=getQueue"] yajl_JSON];
-        
-        // Set the volume
-        MPMusicPlayerController *musicPlayer = [MPMusicPlayerController applicationMusicPlayer];
-        if (([[arrayData objectForKey:@"volume"] floatValue] / 10) != musicPlayer.volume) {
-            musicPlayer.volume = [[arrayData objectForKey:@"volume"] floatValue] / 10;
-        }
-        
         NSArray *queue = [arrayData objectForKey:@"queue"];   
         [self setListeners:[arrayData objectForKey:@"listeners"]];
+        float volume = [[arrayData objectForKey:@"volume"] floatValue] / 10;
+        if ((volume > 0.0f) && (musicPlayer.volume != volume)) {
+            NSLog(@"setting volume to %f", volume);
+            musicPlayer.volume = volume;
+        }
         
         int size = [_QUEUE length];
         [_QUEUE updateQueue:queue];
         
         // update the skip value if we aren't playing
-        RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];        
+        RDPlayer* player = [[rrrrradioAppDelegate rdioInstance] player];        
         if ([player state] != RDPlayerStatePlaying) {
             skip = [[arrayData objectForKey:@"timestamp"] intValue] - [[[queue objectAtIndex:0] objectForKey:@"startplay"] intValue];
             [_QUEUE prune:[_QUEUE length]];
@@ -595,10 +574,7 @@
             });
         }
         
-        // update the RDPlayer if we're not within 3 seconds of end of track
-        if (([player state] == RDPlayerStatePlaying) &&
-            (([[[_QUEUE currentTrack] objectForKey:@"duration"] doubleValue]-[player position])>3) &&
-            ([player position]>3)) {
+        if ([player state] == RDPlayerStatePlaying) { 
             NSArray* queue = [_QUEUE getTrackKeys];
             int ctrkindex = [queue indexOfObject:[player currentTrack]];
             
@@ -635,6 +611,21 @@
 - (void)splitViewController: (UISplitViewController*)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem*)barButtonItem forPopoverController: (UIPopoverController*)pc 
 {
     // configure barButton
+/*    
+    UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage* image = [UIImage imageNamed:@"UIBarButtonAdd.png"];
+    [button setImage:image forState:UIControlStateNormal];    
+    [button setFrame:CGRectMake(0, 0, image.size.width+10, image.size.width+10)];
+    [button addTarget:self action: @selector(pop:) forControlEvents:UIControlEventTouchUpInside];
+    
+    CALayer *buttonLayer = [button layer];
+    [buttonLayer setMasksToBounds:YES];
+    [buttonLayer setCornerRadius:10.0];
+    [buttonLayer setBorderWidth:1.0];
+    [buttonLayer setBorderColor:[[UIColor grayColor] CGColor]];
+    
+    barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+*/    
     [barButtonItem setTitle:@"Request"];
     
     NSMutableArray * items = [[toolbar items] mutableCopy];
@@ -654,13 +645,13 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-//    for (UIView *subview in volumeToolbar.subviews) {
-//        if ([subview isKindOfClass:[MPVolumeView class]]) {
-//            [subview setFrame:CGRectMake(0, 0, self.toolbar.frame.size.width-55, 20)];
-//            [subview setCenter:CGPointMake(((self.toolbar.frame.size.width-55)/2)+45, 22)];
-//            [subview sizeToFit];
-//        }
-//    }
+    for (UIView *subview in volumeToolbar.subviews) {
+        if ([subview isKindOfClass:[MPVolumeView class]]) {
+            [subview setFrame:CGRectMake(0, 0, self.toolbar.frame.size.width-55, 20)];
+            [subview setCenter:CGPointMake(((self.toolbar.frame.size.width-55)/2)+45, 22)];
+            [subview sizeToFit];
+        }
+    }
     
     for (UIView *subview in opsToolbar.subviews) {
         if ([subview isKindOfClass:[UIButton class]]) {
@@ -698,13 +689,9 @@
         NSLog(@"Host is reachable but before it wasn't");
         self.hostActive = YES;
         if (hostStatus == ReachableViaWiFi) {
-            [FlurryAnalytics logEvent:@"Network speed changed" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"WiFi", @"speed", nil]];
-            [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Network speed changed" attributes:[NSDictionary dictionaryWithObjectsAndKeys:@"WiFi", @"speed", nil]];
             
             [self setNetworkSpeed:ReachableViaWiFi];
         } else {
-            [FlurryAnalytics logEvent:@"Network speed changed" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"WWAN", @"speed", nil]];            
-            [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Network speed changed" attributes:[NSDictionary dictionaryWithObjectsAndKeys:@"WWAN", @"speed", nil]];
             [self setNetworkSpeed:ReachableViaWWAN];
         }
         
@@ -712,7 +699,7 @@
             NSString* savedToken = [[Settings settings] accessToken];
             if(savedToken != nil) {
                 NSLog(@"Found access token! %@", savedToken);
-                [[rrrrradioAppDelegate rdioInstance] authorizeUsingAccessToken:savedToken];
+                [[rrrrradioAppDelegate rdioInstance] authorizeUsingAccessToken:savedToken fromController:nil];
             }       
         }
         
@@ -732,7 +719,7 @@
         
         int poolingInterval=0;
         if (networkSpeed==ReachableViaWiFi) {
-            poolingInterval = 20;
+            poolingInterval = 5;
         } else if (networkSpeed==ReachableViaWWAN) {
             poolingInterval = 60;
         }
@@ -745,8 +732,6 @@
                  hostStatus==NotReachable ||
                                    internetStatus==NotReachable)) {
         NSLog(@"internet suddenly down -- shut it all down");
-        [FlurryAnalytics logEvent:@"Network speed changed" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"Off", @"speed", nil]];        
-        [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Network speed changed" attributes:[NSDictionary dictionaryWithObjectsAndKeys:@"Off", @"speed", nil]];
         self.hostActive = NO;
         self.networkSpeed = NotReachable;
         
@@ -775,12 +760,8 @@
             NSLog(@"Resetting background pooling");
             int poolingInterval = 120;
             if (hostStatus==ReachableViaWiFi) {
-                [FlurryAnalytics logEvent:@"Network speed changed" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"WiFi", @"speed", nil]];                
-                [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Network speed changed" attributes:[NSDictionary dictionaryWithObjectsAndKeys:@"WiFi", @"speed", nil]];
-                poolingInterval = 20;
+                poolingInterval = 5;
             } else if (hostStatus==ReachableViaWWAN) {
-                [FlurryAnalytics logEvent:@"Network speed changed" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"WWAN", @"speed", nil]];                
-                [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Network speed changed" attributes:[NSDictionary dictionaryWithObjectsAndKeys:@"WWAN", @"speed", nil]];
                 poolingInterval = 60;
             }
             
@@ -806,24 +787,18 @@
             [self refreshQueueDisplay]; 
             [self refreshLockDisplay];               
         }
-        /*
         // Enter a playing state
         if ((oldState!=2) && (skip>0)) {
-            RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];
+            RDPlayer* player = [[rrrrradioAppDelegate rdioInstance] player];            
             NSLog(@"Picking up at %d", skip);
             sleep(1);
             [player seekToPosition:skip];
             skip = -1;
             
-            [FlurryAnalytics logEvent:@"Stream event" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"Start", @"type", nil]];            
-            [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Stream event" attributes:[NSDictionary dictionaryWithObjectsAndKeys:@"Start", @"type", nil]];            
         }
-        */
     } else if (newState == 3) {
         NSLog(@"Stopped State");        
         // Enter a stopped state
-        [FlurryAnalytics logEvent:@"Stream event" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"Stop", @"type", nil]];                    
-        [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Stream event" attributes:[NSDictionary dictionaryWithObjectsAndKeys:@"Stop", @"type", nil]];        
         if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
             NSLog(@"We're in the background, clean stuff up");
             [self stopStream];
@@ -836,8 +811,6 @@
         } else 
         if (skip < 0) {
             NSLog(@"New Track! (this code shouldn't ever fire)");
-            [FlurryAnalytics logEvent:@"Stream event" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"New track", @"type", nil]];                        
-            [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Stream event" attributes:[NSDictionary dictionaryWithObjectsAndKeys:@"New track", @"type", nil]];            
 //            NSDictionary* currentTrack = [_QUEUE getNext];
 //            [self playTrack:currentTrack];
             [self refreshQueueDisplay];
@@ -846,8 +819,6 @@
             NSLog(@"Stopping. Skip is %d", skip);
         }
     } else {
-        [FlurryAnalytics logEvent:@"Stream event" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Other event: %u", newState],@"type", nil]];                    
-        [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Stream event" attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Other event: %u", newState],@"type", nil]];                    
 
         NSLog(@"Some other State");        
         [self stopStream];
@@ -859,16 +830,13 @@
 
 - (BOOL)rdioIsPlayingElsewhere {
     NSLog(@"*** Rdio is playing elsewhere **");
-    [FlurryAnalytics logEvent:@"Stream event" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"Logged in elsewhere", @"type", nil]];                
-    
-    [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Stream event" attributes:[NSDictionary dictionaryWithObjectsAndKeys:@"Logged in elsewhere", @"type", nil]];                
 	return NO;
 }
 
 
 - (void)dealloc
 {
-    RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];
+    RDPlayer* player = [[rrrrradioAppDelegate rdioInstance] player];
     [player removeObserver:self forKeyPath:@"position"];
     [player removeObserver:self forKeyPath:@"currentTrack"];    
     [player stop];
@@ -886,7 +854,6 @@
 
 
 - (void) enableBackgroundPooling:(int) seconds {
-/*
     if ([queueLoader isValid]) {
         [queueLoader invalidate];                            
         queueLoader = nil;
@@ -896,16 +863,13 @@
         NSLog(@"Enabling background pooling at a %i second interval", seconds);
         queueLoader = [NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(updateQueue) userInfo:nil repeats:YES];    
     }
-*/
+
 }
 
 #pragma mark -
 #pragma mark RdioDelegate methods
 
 - (void)rdioDidAuthorizeUser:(NSDictionary *)user withAccessToken:(NSString *)accessToken {
-    [TestFlight passCheckpoint:@"Authenticated"];
-    [FlurryAnalytics logEvent:@"Authenticated"];    
-    [[LocalyticsSession sharedLocalyticsSession] tagEvent:@"Authenticated"];
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    [user valueForKey:@"key"], @"keys", 
@@ -919,16 +883,11 @@
     [[Settings settings] setIcon:[user objectForKey:@"icon"]];
     [[Settings settings] save];  
     
-    [FlurryAnalytics setUserID:[user objectForKey:@"key"]];
-    [FlurryAnalytics setGender:[user objectForKey:@"gender"]];
-
     [self enableRequests];
     
 }
 
 - (void)rdioDidLogout {
-    [TestFlight passCheckpoint:@"Deauthenticated"];
-    [FlurryAnalytics logEvent:@"Deauthenticated" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"Manual", @"reason", nil]];                   
     
     [[Settings settings] setUser:nil];
     [[Settings settings] setAccessToken:nil];
@@ -952,7 +911,6 @@
         if ([data objectForKey:[[Settings settings] userKey]]!=nil) {
             // Returned data to see if logged in user has Unlimited account
             if ([[[data objectForKey:[[Settings settings] userKey]] objectForKey:@"isUnlimited"] integerValue] == 0 ) {
-                TFLog(@"Authenticated user doesn't have Unlimited account");
                 // logout active account
                 [[rrrrradioAppDelegate rdioInstance] logout];                
                 
@@ -962,9 +920,6 @@
                 [hud show];
                 [hud hideAfter:3.0];                            
             } else {
-                [TestFlight passCheckpoint:@"Unlimited confirmed"];
-                [FlurryAnalytics logEvent:@"Unlimited confirmed"];
-                TFLog(@"Unlimited account verified");
             }
         } else {
             NSLog(@"some other api result came in");
@@ -981,8 +936,8 @@
 /**
  * Authentication failed so we should alert the user.
  */
-- (void)rdioAuthorizationFailed:(NSError *)error {
-    NSLog(@"Rdio authorization failed: %@", error.description);
+- (void)rdioAuthorizationFailed:(NSString *)message {
+    NSLog(@"Rdio authorization failed: %@", message);
 }
 
 
@@ -1004,12 +959,13 @@
     // Add HUD
 	hud = [[ATMHud alloc] initWithDelegate:self];
     [self.view addSubview:hud.view];
+    musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
     
     // Add volume slider
     MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(0, 0, self.toolbar.frame.size.width-55, 20)] autorelease];
     [volumeView setCenter:CGPointMake(((self.toolbar.frame.size.width-55)/2)+35, 22)];
     [volumeView sizeToFit];
-//    [volumeToolbar addSubview:volumeView];
+    [volumeToolbar addSubview:volumeView];
     
     // check for internet connection
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
@@ -1018,7 +974,7 @@
     [internetReachable startNotifier];
     
     // check if a pathway to a random host exists
-    hostReachable = [[Reachability reachabilityWithHostName: @"radio.saltmines.us"] retain];
+    hostReachable = [[Reachability reachabilityWithHostName: @"saltmines.us"] retain];
     [hostReachable startNotifier];
     
     // now patiently wait for the notification    
@@ -1026,48 +982,48 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     
-//    // Build and display the "current listeners" box
-//    listenersBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 24)];
-//    [listenersBg setBackgroundColor:[UIColor blackColor]];
-//    // Round the corners
-//    CALayer *l = [self.listenersBg layer];
-//    [l setMasksToBounds:YES];
-//    [l setCornerRadius:8.0];
-//    // Add border
-//    [l setBorderWidth:1.0];
-//    [l setBorderColor:[[UIColor blackColor] CGColor]];    
-//
-//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {                    
-//        // iPad specific tweaks
-//        
-//        UIView *containerView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, upcoming.frame.size.width , 40)] autorelease];
-//        [upcoming setTableHeaderView:containerView];
-//        
-//        [upcoming setSeparatorColor:[UIColor clearColor]];
-//        [upcoming setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-//    }
-//
-//    
-//    listenersLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 4, 80, 16)];
-//    [listenersLabel setText:@"0 Listeners"];
-//    [listenersLabel setBackgroundColor:[UIColor clearColor]];
-//    [listenersLabel setTextColor:[UIColor grayColor]];
-//    [listenersLabel setFont:[UIFont fontWithName:@"Trebuchet MS" size:12]];
-//    [listenersLabel setTextAlignment:UITextAlignmentCenter];
-//    
-//    [listenersBg addSubview:listenersLabel];
-//    
-//    UIButton *listenerButton = [[UIButton alloc] initWithFrame:CGRectMake(self.opsToolbar.frame.size.width/2-50, self.opsToolbar.frame.size.height/2-12, 100, 24)];
-//    [listenerButton addTarget:self action:@selector(displayListeners) forControlEvents:UIControlEventTouchUpInside];
-//    [listenerButton setShowsTouchWhenHighlighted:YES];
-//    [listenerButton addSubview:listenersBg];
-//    
-//    
-//    [self.opsToolbar addSubview:listenerButton];
-//    
-//    [listenersLabel release];
-//    [listenersBg release];
-//    [listenerButton release];    
+    // Build and display the "current listeners" box
+    listenersBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 24)];
+    [listenersBg setBackgroundColor:[UIColor blackColor]];
+    // Round the corners
+    CALayer *l = [self.listenersBg layer];
+    [l setMasksToBounds:YES];
+    [l setCornerRadius:8.0];
+    // Add border
+    [l setBorderWidth:1.0];
+    [l setBorderColor:[[UIColor blackColor] CGColor]];    
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {                    
+        // iPad specific tweaks
+        
+        UIView *containerView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, upcoming.frame.size.width , 40)] autorelease];
+        [upcoming setTableHeaderView:containerView];
+        
+        [upcoming setSeparatorColor:[UIColor clearColor]];
+        [upcoming setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+    }
+
+    
+    listenersLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 4, 80, 16)];
+    [listenersLabel setText:@"0 Listeners"];
+    [listenersLabel setBackgroundColor:[UIColor clearColor]];
+    [listenersLabel setTextColor:[UIColor grayColor]];
+    [listenersLabel setFont:[UIFont fontWithName:@"Trebuchet MS" size:12]];
+    [listenersLabel setTextAlignment:UITextAlignmentCenter];
+    
+    [listenersBg addSubview:listenersLabel];
+    
+    UIButton *listenerButton = [[UIButton alloc] initWithFrame:CGRectMake(self.opsToolbar.frame.size.width/2-50, self.opsToolbar.frame.size.height/2-12, 100, 24)];
+    [listenerButton addTarget:self action:@selector(displayListeners) forControlEvents:UIControlEventTouchUpInside];
+    [listenerButton setShowsTouchWhenHighlighted:YES];
+    [listenerButton addSubview:listenersBg];
+    
+    
+    [self.opsToolbar addSubview:listenerButton];
+    
+    [listenersLabel release];
+    [listenersBg release];
+    [listenerButton release];    
 
     [super viewDidLoad];
 }
@@ -1118,11 +1074,9 @@
 
 -(void)backgrounding {
     NSLog(@"Backgrounding");
-    [FlurryAnalytics logEvent:@"Backgrounded" timed:YES];
 }
 
 -(void)foregrounding {
-    [TestFlight takeOff:@"47b88feaa535ee288e2e5133f6e87a4d_MjQyMDkyMDEyLTA1LTA4IDE0OjEzOjUzLjcyNTI0OA"];        
     NSLog(@"We're back!");
     
     [[NSUserDefaults standardUserDefaults] synchronize];            
@@ -1137,21 +1091,21 @@
         [[NSUserDefaults standardUserDefaults] setBool:0 forKey:@"logout"];
         [[NSUserDefaults standardUserDefaults] synchronize];        
     }
+
     if (internetActive && hostActive) {
-        RDPlayer *player = [[rrrrradioAppDelegate rdioInstance] preparePlayerWithDelegate:self];    
+        RDPlayer* player = [[rrrrradioAppDelegate rdioInstance] player];    
         if (player.state != RDPlayerStatePlaying) {
             NSLog(@"Initializing: Reset");
             [self stopStream];
             [self reset];
         } else {
             NSLog(@"Initializing: UpdateQueue");
-            [FlurryAnalytics endTimedEvent:@"Backgrounded" withParameters:nil];                
             [self updateQueue];        
         }
         if (queueLoader == nil) {
             int poolingInterval=0;
             if (networkSpeed==ReachableViaWiFi) {
-                poolingInterval = 20;
+                poolingInterval = 5;
             } else if (networkSpeed==ReachableViaWWAN) {
                 poolingInterval = 60;
             }
@@ -1161,7 +1115,6 @@
             }        
         }
     }
-
 }
 
 @end

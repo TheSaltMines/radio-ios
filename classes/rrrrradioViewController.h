@@ -15,6 +15,7 @@
 #import "ATMHudDelegate.h"
 @class ATMHud;
 @class Reachability;
+@class MPMusicPlayerController;
 
 @interface rrrrradioViewController : UIViewController <ATMHudDelegate,RDAPIRequestDelegate,RDPlayerDelegate,RdioDelegate,UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UISplitViewControllerDelegate> {
     IBOutlet UITableView *upcoming;
@@ -36,7 +37,8 @@
     BOOL internetActive;
     BOOL hostActive;
     NetworkStatus networkSpeed; 
-	ATMHud *hud;    
+	ATMHud *hud;
+    MPMusicPlayerController *musicPlayer;
 }
 
 - (void) refreshLockDisplay;
@@ -72,5 +74,6 @@
 @property (nonatomic) BOOL hostActive;
 @property (nonatomic) NetworkStatus networkSpeed;
 @property (nonatomic, retain) ATMHud *hud;
+@property (nonatomic, retain) MPMusicPlayerController *musicPlayer;
 
 @end

@@ -60,7 +60,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ([self.title isEqualToString:@"Artists"]) {    
+    if ([self.title isEqualToString:@"Artists"]) {
+        NSLog(@"%@", indexSize);
         return [[indexSize objectAtIndex:section] intValue];
     } else {
         return [dataSource count];
@@ -130,8 +131,6 @@
         NSLog(@"Settings: %@", [Settings settings]);
         if ([[Settings settings] accessToken]!=nil) {
             // Track selected: Queue it up
-            [TestFlight passCheckpoint:@"Track Requested"];
-            [FlurryAnalytics logEvent:@"Track Requested"];            
             
             NSString *requestUrl = [NSString stringWithFormat:@"controller.php?r=queue&key=%@", [item valueForKey:@"key"]];
             NSDictionary *arrayData = [[DataInterface issueCommand:requestUrl] yajl_JSON]; 
@@ -234,7 +233,7 @@
 {
     [super viewDidLoad];
     
-    indexChars = @"#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    indexChars = @"#ABCDEFGHIJKLMNOPRSTUVWXYZ";
     int currentIndex = 0;
     
     if ([self.title isEqualToString:@"Artists"]) {
@@ -251,7 +250,7 @@
                 currentIndex++;            
                 if ([indexSize count]>currentIndex) {
                     //increment
-                    [indexSize replaceObjectAtIndex:currentIndex withObject:[NSNumber numberWithInt:[[indexSize objectAtIndex:currentIndex] intValue]+1]];               
+                    [indexSize replaceObjectAtIndex:currentIndex withObject:[NSNumber numberWithInt:[[indexSize objectAtIndex:currentIndex] intValue]+1]];
                 } else {
                     //initialize
                     [indexSize insertObject:[NSNumber numberWithInt:1] atIndex:currentIndex];
@@ -259,18 +258,18 @@
             } else {
                 if ([indexSize count]>currentIndex) {
                     //increment
-                    [indexSize replaceObjectAtIndex:currentIndex withObject:[NSNumber numberWithInt:[[indexSize objectAtIndex:currentIndex] intValue]+1]];            
+                    [indexSize replaceObjectAtIndex:currentIndex withObject:[NSNumber numberWithInt:[[indexSize objectAtIndex:currentIndex] intValue]+1]];
                 } else {
                     //initialize
                     [indexSize insertObject:[NSNumber numberWithInt:1] atIndex:currentIndex];
                 }
             }
         }
-    };
+    }
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    [self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
+    [self.navigationController.navigationBar setTintColor:[UIColor colorWithRed:102.0f/255.0f green:102.0f/255.0f blue:102.0f/255.0f alpha:1.0f]];
     NSLog(@"rotated");
     // Do any additional setup after loading the view from its nib.
 }
